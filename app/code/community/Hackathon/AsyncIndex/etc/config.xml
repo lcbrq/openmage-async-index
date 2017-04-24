@@ -63,7 +63,7 @@
         <jobs>
             <hackathon_asyncindex_cron>
                 <run>
-                    <model>hackathon_asyncindex/observer::schedule_index</model>
+                    <model>hackathon_asyncindex/observer::scheduleIndex</model>
                 </run>
             </hackathon_asyncindex_cron>
             <hackathon_asyncindex_events_cron>

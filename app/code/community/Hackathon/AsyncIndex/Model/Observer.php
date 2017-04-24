@@ -113,7 +113,7 @@ class Hackathon_AsyncIndex_Model_Observer
     /**
      * Executes manually scheduled reindex
      */
-    public function schedule_index()
+    public function scheduleIndex()
     {
         // Only one job should be running.
         $scheduledJob = Mage::getModel('cron/schedule')->getCollection()
@@ -144,7 +144,7 @@ class Hackathon_AsyncIndex_Model_Observer
      *
      * @throws Exception
      */
-    public function unprocessed_events_index()
+    public function unprocessedEventsIndex()
     {
 
         if ( !Mage::getStoreConfig('system/asyncindex/auto_index') ) {
@@ -210,7 +210,7 @@ class Hackathon_AsyncIndex_Model_Observer
         } else {
 
             // run the normal indexer method
-            $this->unprocessed_events_index();
+            $this->unprocessedEventsIndex();
 
         }
 
