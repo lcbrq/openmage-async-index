@@ -103,7 +103,7 @@ class Hackathon_AsyncIndex_Model_Observer
         if ($this->_shouldLoadUnprocessedEventCount) {
             /* @var $process Mage_Index_Model_Process */
             foreach ($processCollection as $process) {
-                $process->setEventCount($process->getUnprocessedEventsCollection()->count());
+                $process->setEventCount($process->getUnprocessedEventsCollection()->getSize());
             }
         }
         
