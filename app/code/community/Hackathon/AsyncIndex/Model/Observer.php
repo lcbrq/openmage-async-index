@@ -183,14 +183,12 @@ class Hackathon_AsyncIndex_Model_Observer
         }
     }
 
-    public function runIndex() {
+    public function runIndex()
+    {
 
         if ( !Mage::getStoreConfig('system/asyncindex/auto_index') ) {
             return null;
         }
-
-        $blacklistCfg = Mage::getStoreConfig('system/asyncindex/blacklist_indexes');
-        $blacklist = explode(',', $blacklistCfg);
 
         $partialIndex = Mage::getStoreConfig('system/asyncindex/partial_cron_index');
 
@@ -199,12 +197,13 @@ class Hackathon_AsyncIndex_Model_Observer
             $indexManager = Mage::getModel('hackathon_asyncindex/manager');
             $pCollection = Mage::getSingleton('index/indexer')->getProcessesCollection();
 
+            /** Reindex Stock First */
+            $stockIndex = Mage::getSingleton('index/indexer')->getProcessByCode('cataloginventory_stock');
+            $indexManager->executePartialIndex($stockIndex);
+
+
             /** @var Mage_Index_Model_Process $process */
             foreach ($pCollection as $process) {
-                if ( in_array($process->getIndexerCode(), $blacklist) )
-                {
-                  continue;
-                }
                 $indexManager->executePartialIndex($process);
             }
 
