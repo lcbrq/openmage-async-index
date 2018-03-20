@@ -48,6 +48,7 @@ class Hackathon_AsyncIndex_Adminhtml_AsyncindexController extends Mage_Adminhtml
             $processModel->load($processId);
             $process = $processModel->getIndexerCode();
         }
+
         return $process;
     }
 
@@ -70,8 +71,7 @@ class Hackathon_AsyncIndex_Adminhtml_AsyncindexController extends Mage_Adminhtml
         
         $taskName = $fullReindex ? 'Reindex' : 'partial Index';
 
-        try
-        {
+        try {
             /**
              * @var Mage_Cron_Model_Schedule $schedule
              */
@@ -83,9 +83,7 @@ class Hackathon_AsyncIndex_Adminhtml_AsyncindexController extends Mage_Adminhtml
             $schedule->save();
 
             $session->addSuccess($helper->__($taskName.' successfully scheduled for process ') . $indexerCode);
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             $session->addError($helper->__($taskName.' schedule not successful, message: %s', $e->getMessage()));
         }
     }

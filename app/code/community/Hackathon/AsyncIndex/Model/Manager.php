@@ -27,30 +27,27 @@ class Hackathon_AsyncIndex_Model_Manager
         $pendingMode = 'pending';
 
         //Fallback for 1.6.2 installations > Undefined class constant 'MODE_SCHEDULE'
-        if ( true === defined('Mage_Index_Model_Process::MODE_SCHEDULE') ) {
+        if (true === defined('Mage_Index_Model_Process::MODE_SCHEDULE')) {
             $indexMode = Mage_Index_Model_Process::MODE_SCHEDULE;
             $pendingMode = Mage_Index_Model_Process::STATUS_PENDING;
         }
 
-        try
-        {
+        try {
             $process->setMode($indexMode);
             $process->indexEvents();
-            if ( count(Mage::getResourceSingleton('index/event')->getUnprocessedEvents($process)) === 0 ) {
+            if (count(Mage::getResourceSingleton('index/event')->getUnprocessedEvents($process)) === 0 ) {
                 $process->changeStatus($pendingMode);
             }
+
             if (Mage::getStoreConfigFlag('system/asyncindex/use_transactions')) {
                 $resourceModel->commit();
             }
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             if (Mage::getStoreConfigFlag('system/asyncindex/use_transactions')) {
                 $resourceModel->rollBack();
             }
+
             throw $e;
         }
-
     }
-
 }

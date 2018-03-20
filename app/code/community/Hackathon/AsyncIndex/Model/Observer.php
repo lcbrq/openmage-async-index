@@ -82,11 +82,12 @@ class Hackathon_AsyncIndex_Model_Observer
      */
     public function prepareCollectionForGrid(Varien_Event_Observer $observer)
     {
-        /* @var $block Mage_Core_Block_Abstract $block */
+        /** @var $block Mage_Core_Block_Abstract $block */
         $block = $observer->getBlock();
         if ($block instanceof Mage_Index_Block_Adminhtml_Process_Grid) {
             $this->_shouldLoadUnprocessedEventCount = true;
         }
+
         return $this;
     }
     /**
@@ -98,10 +99,10 @@ class Hackathon_AsyncIndex_Model_Observer
      */
     public function addEventCountToCollection(Varien_Event_Observer $observer)
     {
-        /* @var $processCollection Mage_Index_Model_Resource_Process_Collection */
+        /** @var $processCollection Mage_Index_Model_Resource_Process_Collection */
         $processCollection = $observer->getProcessCollection();
         if ($this->_shouldLoadUnprocessedEventCount) {
-            /* @var $process Mage_Index_Model_Process */
+            /** @var $process Mage_Index_Model_Process */
             foreach ($processCollection as $process) {
                 $process->setEventCount($process->getUnprocessedEventsCollection()->getSize());
             }
@@ -147,7 +148,7 @@ class Hackathon_AsyncIndex_Model_Observer
     public function unprocessedEventsIndex()
     {
 
-        if ( !Mage::getStoreConfig('system/asyncindex/auto_index') ) {
+        if (!Mage::getStoreConfig('system/asyncindex/auto_index')) {
             return null;
         }
 
@@ -156,8 +157,7 @@ class Hackathon_AsyncIndex_Model_Observer
 
         $resourceModel->beginTransaction();
 
-        try
-        {
+        try {
             $pCollection = Mage::getSingleton('index/indexer')->getProcessesCollection();
             /** @var Mage_Index_Model_Process $process */
             foreach ($pCollection as $process) {
@@ -170,10 +170,12 @@ class Hackathon_AsyncIndex_Model_Observer
                     $process->processEvent($unprocessedEvent);
                     $unprocessedEvent->save();
                 }
-                if ( count(Mage::getResourceSingleton('index/event')->getUnprocessedEvents($process) ) === 0) {
+
+                if ((Mage::getResourceSingleton('index/event')->getUnprocessedEvents($process)) === 0) {
                     $process->changeStatus(Mage_Index_Model_Process::STATUS_PENDING);
                 }
             }
+
             $resourceModel->commit();
         }
         catch (Exception $e)
@@ -186,14 +188,13 @@ class Hackathon_AsyncIndex_Model_Observer
     public function runIndex()
     {
 
-        if ( !Mage::getStoreConfig('system/asyncindex/auto_index') ) {
+        if (!Mage::getStoreConfig('system/asyncindex/auto_index')) {
             return null;
         }
 
         $partialIndex = Mage::getStoreConfig('system/asyncindex/partial_cron_index');
 
-        if($partialIndex) {
-
+        if ($partialIndex) {
             $indexManager = Mage::getModel('hackathon_asyncindex/manager');
             $pCollection = Mage::getSingleton('index/indexer')->getProcessesCollection();
 
@@ -206,12 +207,9 @@ class Hackathon_AsyncIndex_Model_Observer
             foreach ($pCollection as $process) {
                 $indexManager->executePartialIndex($process);
             }
-
         } else {
-
             // run the normal indexer method
             $this->unprocessedEventsIndex();
-
         }
 
     }
