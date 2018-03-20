@@ -35,7 +35,7 @@ class Hackathon_AsyncIndex_Model_Manager
         try {
             $process->setMode($indexMode);
             $process->indexEvents();
-            if (count(Mage::getResourceSingleton('index/event')->getUnprocessedEvents($process)) === 0 ) {
+            if (Mage::getResourceSingleton('index/event')->getUnprocessedEvents($process)->getSize() === 0 ) {
                 $process->changeStatus($pendingMode);
             }
 
